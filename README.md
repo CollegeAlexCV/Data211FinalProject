@@ -10,12 +10,18 @@ is different enough to a recorded frequency.
 Over the course between 10/17 and 11/7 I performed 96 trials with varying frequencies of trials per day. I performed 4 more trials on 11/12 to round
 out the list to 100. This got my lowest category to at least five for a goodness of fit test. Speaking of categories, here they are:
 
-Cage The Elephant: 33 out of 588 videos. Frequency of ~5.61
-Poor Man's Poison: 48 out of 558 videos. Frequency of ~8.16
-The Crane Wives: 35 out of 588 videos. Frequency of ~5.95
-The Heavy: 35 out of 588 videos. Frequency of ~5.95
-Tupperware Remix Party: 68 out of 588 videos. Frequency of ~11.56
-All Other Artists: 369 out of 588 videos. Frequency of ~62.76
+Cage The Elephant: 33 out of 588 videos. Frequency of ~5.61.
+
+Poor Man's Poison: 48 out of 558 videos. Frequency of ~8.16.
+
+The Crane Wives: 35 out of 588 videos. Frequency of ~5.95.
+
+The Heavy: 35 out of 588 videos. Frequency of ~5.95.
+
+Tupperware Remix Party: 68 out of 588 videos. Frequency of ~11.56.
+
+All Other Artists: 369 out of 588 videos. Frequency of ~62.76.
+
 
 The data collection included the actual channel they had, how many likes the video had, how many subscribers the channel had, 
 if my channel had liked/subscribed per video, where the song was in the base playlist, and where they showed up in the first
