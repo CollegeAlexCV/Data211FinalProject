@@ -1,0 +1,312 @@
+---
+title: "Final Project Data 211"
+author: "Alex Voiovich"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(tidyverse)
+library(rmarkdown)
+library(ggplot2)
+```
+
+## Data Collection
+Here I am going to define the base Data Frame I will be adding to
+over the course of these three weeks.
+```{r}
+SongCue <- read_excel("C:/Users/avoio/OneDrive/Documents/Data211_HW/Data/Data 211 Project Data.xlsx", sheet = 2)
+FirstSongBase<-numeric(588)
+SongCue["FirstSong"]<-FirstSongBase
+#SongCue$TotalSubscribers<-as.numeric(SongCue$TotalSubscribers)
+#SongCue$TotalViews<-as.numeric(SongCue$TotalViews)
+#SongCue$IsLiked<-as.logical(SongCue$IsLiked)
+#SongCue$IsSubscribed<-as.logical(SongCue$IsSubscribed)
+#write.csv(SongCue, file = "FinalProjectData.csv")
+```
+
+
+Here I am going to create a function to parse a string of values
+and add based to the base data frame.
+
+```{r}
+#uses a vector of 100 values
+addNewSongCue <- function(songVector){
+  #sifts through each value
+  for(i in 1:length(songVector)){
+    #Find the song in the base data frame
+    #define index to failsafe the song not being in the vector.
+    index<-0
+    for(j in 1:588){
+      if(tolower(SongCue$SongName[j]) == tolower(songVector[i])){
+        #setting index to j when they find the right name
+        #will end the loop and find the correct index
+        #to add to.
+        index=j
+        break
+      }
+    }
+    if(i==1 && index!=0){
+      SongCue$FirstSong[index]<-SongCue$FirstSong[index]+1
+    } 
+    if(i<=10 && index!=0){
+      SongCue$InTopTen[index]<-SongCue$InTopTen[index]+1
+    }
+    if(i<=25 && index!=0){
+      SongCue$InTopTwentyFive[index]<-
+        SongCue$InTopTwentyFive[index]+1
+    } 
+    if(i<=50 && index!=0) {
+      SongCue$InTopFifty[index]<-SongCue$InTopFifty[index]+1
+    } 
+    if(i<=100 && index!=0) {
+      SongCue$InTopOneHundred[index]<-
+        SongCue$InTopOneHundred[index]+1
+    }
+  }
+  return(SongCue)
+}
+```
+
+Here is going to be each vector I will add. I will report them in
+order of the list, and only the first 100 of each shuffle.
+```{r}
+SongVectorList<-read_excel("C:/Users/avoio/OneDrive/Documents/Data211_HW/Data/Data 211 Project Data.xlsx", sheet = 1)
+SongVectorList<-SongVectorList%>%
+  select(-BaseTitles)%>%
+  slice(-(101:588))
+SongVectorList<-SongVectorList[,1:100]
+for(i in 1:length(SongVectorList)){
+  SongCue<-addNewSongCue(SongVectorList[[i]])
+}
+SongCue$SongArtist<-as.factor(SongCue$SongArtist)
+SongCue$SongArtist<-fct_collapse(SongCue$SongArtist, 
+                                 Others = c("The Fray", "Good Kid", "RichaadEB",
+                    "Adam Jones", "Barns Courtney", "Boy Pablo", "AJR", "Aviators",
+                    "Bill Withers", "Billy Joel", "Burn The Ballroom", "Colter Wall",
+                    "CyYu Music", "Des Rocs", "Disturbed", "Don McLean", "Dr. Villain",
+                    "Dropkick Murphys", "Electric Swing Circus","ElipsisEditsYT",
+                    "Fall Out Boy", "Finger Eleven", "Foo Fighters", "Friend With The Enemy",
+                    "Fries On The Side", "Genesis", "Ghoultown","Godsmack", "GoldenBoys",
+                    "Green Day", "half*alive", "IDKHOW", "Instrument Maniac", "Jonathan Young",
+                    "Keith Power", "Kocchi no Kento", "Lemon Demon & Marina & The Diamonds",
+                    "Lovejoy", "Maroon 5", "Matthew Raetzel", "MGMT", "Miike Snow",
+                    "Minecraft", "MyNewSoundtrack", "NateWantsToBattle",
+                    "Nejime Studios", "Nick Lutsko", "Night Runner", "Phil Collins",
+                    "PUNPEE", "Rag'n'Bone Man", "Rob Cantor", "Sail North",
+                    "Saint Motel", "Sam Tinnesz", "Savage Garden", "Seal", "Seo Jayeong",
+                    "Shadow Academy", "Shayfer James", "Shinedown", "SIAMES",
+                    "Simon & Garfunkel", "Smash Into Pieces", "Star-Lord", "Studio Yuraki",
+                    "Super Guitar Bros", "Tally Hall", "Tears For Fears", "The Brother's Bright",
+                    "The Brothers Bright", "The Dead South", "The Devil Makes Three", "The Fray",
+                    "The Midnight", "The Offspring", "The Oh Hellos", "The Rolling Stones",
+                    "The Score", "The Stupendium", "The Unlikely Candidates", "Three Days Grace",
+                    "Weathers", "Weird Al Yankovic", "Will Stetson", "Younger Hunger", "Yumi Kawamura"))
+SongCue$SongArtist<-fct_collapse(SongCue$SongArtist,
+                                 PoorMansPoison = "PMP")
+table(SongCue$SongArtist)
+```
+
+Here is where I will graph the placements vs the songs
+```{r, fig.width=16, fig.height=16}
+ggplot(SongCue, aes(x=SongArtist,y=FirstSong))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=30))+
+  labs(title = "Which Bands are Shuffled to the First Song",
+       x = "Band Name", y = "Times Shuffled First")
+ggplot(SongCue, aes(x=SongArtist,y=InTopTen))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=30))+
+    labs(title = "Which Bands are Shuffled to the Top Ten",
+       x = "Band Name", y = "Times Shuffled Top Ten")
+ggplot(SongCue, aes(x=SongArtist,y=InTopTwentyFive))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=30))+
+    labs(title = "Which Bands are Shuffled to the Top Twenty Five",
+       x = "Band Name", y = "Times Shuffled Top Twenty Five")
+ggplot(SongCue, aes(x=SongArtist,y=InTopFifty))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=30))+
+    labs(title = "Which Bands are Shuffled to the Top Fifty",
+       x = "Band Name", y = "Times Shuffled Top Fifty")
+ggplot(SongCue, aes(x=SongArtist,y=InTopOneHundred))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=30))+
+    labs(title = "Which Bands are Shuffled to Top One Hundred",
+       x = "Band Name", y = "Times Shuffled Top One Hundred")
+ggplot(SongCue, aes(x=IsLiked,y=InTopOneHundred))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsSubscribed,y=InTopOneHundred))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsLiked,y=InTopFifty))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsSubscribed,y=InTopFifty))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsLiked,y=InTopTwentyFive))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsSubscribed,y=InTopTwentyFive))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsLiked,y=InTopTen))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsSubscribed,y=InTopTen))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsLiked,y=FirstSong))+
+  geom_boxplot()
+ggplot(SongCue, aes(x=IsSubscribed,y=FirstSong))+
+  geom_boxplot()
+```
+```{r, fig.width=48, fig.height=10}
+ggplot(SongCue, aes(x=SongName,y=FirstSong))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=90))+
+  scale_x_discrete(limits = SongCue$SongName)
+ggplot(SongCue, aes(x=SongName,y=InTopTen))+
+  geom_col()+
+  theme(axis.text.x=element_text(hjust=1,angle=90))+
+  scale_x_discrete(limits = SongCue$SongName)
+```
+
+```{r}
+tableBase<-table(SongCue$SongArtist)
+freqBase<-as.vector(tableBase/sum(tableBase))
+freqBase<-freqBase*length(SongVectorList)
+sumFirstSong<-sum(SongCue$FirstSong)
+tableFirstSong<-c(numeric(6))
+for(i in 1:length(SongCue$FirstSong)){
+  if(SongCue$SongArtist[i]=="Others"){
+    tableFirstSong[1]<-tableFirstSong[1]+SongCue$FirstSong[i]
+  } else if(SongCue$SongArtist[i]=="Cage The Elephant"){
+    tableFirstSong[2]<-tableFirstSong[2]+SongCue$FirstSong[i]
+  } else if(SongCue$SongArtist[i]=="PoorMansPoison"){
+    tableFirstSong[3]<-tableFirstSong[3]+SongCue$FirstSong[i]
+  } else if(SongCue$SongArtist[i]=="The Crane Wives"){
+    tableFirstSong[4]<-tableFirstSong[4]+SongCue$FirstSong[i]
+  } else if(SongCue$SongArtist[i]=="The Heavy"){
+    tableFirstSong[5]<-tableFirstSong[5]+SongCue$FirstSong[i]
+  } else {
+    tableFirstSong[6]<-tableFirstSong[6]+SongCue$FirstSong[i]
+  }
+}
+freqFirstSong<-tableFirstSong/sum(tableFirstSong)
+freqFirstSong<-freqFirstSong*length(SongVectorList)
+tableTopTen<-c(numeric(6))
+for(i in 1:length(SongCue$InTopTen)){
+  if(SongCue$SongArtist[i]=="Others"){
+    tableTopTen[1]<-tableTopTen[1]+SongCue$InTopTen[i]
+  } else if(SongCue$SongArtist[i]=="Cage The Elephant"){
+    tableTopTen[2]<-tableTopTen[2]+SongCue$InTopTen[i]
+  } else if(SongCue$SongArtist[i]=="PoorMansPoison"){
+    tableTopTen[3]<-tableTopTen[3]+SongCue$InTopTen[i]
+  } else if(SongCue$SongArtist[i]=="The Crane Wives"){
+    tableTopTen[4]<-tableTopTen[4]+SongCue$InTopTen[i]
+  } else if(SongCue$SongArtist[i]=="The Heavy"){
+    tableTopTen[5]<-tableTopTen[5]+SongCue$InTopTen[i]
+  } else {
+    tableTopTen[6]<-tableTopTen[6]+SongCue$InTopTen[i]
+  }
+}
+freqTopTen<-tableTopTen/sum(tableTopTen)
+freqTopTen<-freqTopTen*length(SongVectorList)
+tableInTopTwentyFive<-c(numeric(6))
+for(i in 1:length(SongCue$SongArtist)){
+  if(SongCue$SongArtist[i]=="Others"){
+    tableInTopTwentyFive[1]<-tableInTopTwentyFive[1]+SongCue$InTopTwentyFive[i]
+  } else if(SongCue$SongArtist[i]=="Cage The Elephant"){
+    tableInTopTwentyFive[2]<-tableInTopTwentyFive[2]+SongCue$InTopTwentyFive[i]
+  } else if(SongCue$SongArtist[i]=="PoorMansPoison"){
+    tableInTopTwentyFive[3]<-tableInTopTwentyFive[3]+SongCue$InTopTwentyFive[i]
+  } else if(SongCue$SongArtist[i]=="The Crane Wives"){
+    tableInTopTwentyFive[4]<-tableInTopTwentyFive[4]+SongCue$InTopTwentyFive[i]
+  } else if(SongCue$SongArtist[i]=="The Heavy"){
+    tableInTopTwentyFive[5]<-tableInTopTwentyFive[5]+SongCue$InTopTwentyFive[i]
+  } else {
+    tableInTopTwentyFive[6]<-tableInTopTwentyFive[6]+SongCue$InTopTwentyFive[i]
+  }
+}
+freqInTopTwentyFive<-tableInTopTwentyFive/sum(tableInTopTwentyFive)
+freqInTopTwentyFive<-freqInTopTwentyFive*length(SongVectorList)
+tableInTopFifty<-c(numeric(6))
+for(i in 1:length(SongCue$SongArtist)){
+  if(SongCue$SongArtist[i]=="Others"){
+    tableInTopFifty[1]<-tableInTopFifty[1]+SongCue$InTopFifty[i]
+  } else if(SongCue$SongArtist[i]=="Cage The Elephant"){
+    tableInTopFifty[2]<-tableInTopFifty[2]+SongCue$InTopFifty[i]
+  } else if(SongCue$SongArtist[i]=="PoorMansPoison"){
+    tableInTopFifty[3]<-tableInTopFifty[3]+SongCue$InTopFifty[i]
+  } else if(SongCue$SongArtist[i]=="The Crane Wives"){
+    tableInTopFifty[4]<-tableInTopFifty[4]+SongCue$InTopFifty[i]
+  } else if(SongCue$SongArtist[i]=="The Heavy"){
+    tableInTopFifty[5]<-tableInTopFifty[5]+SongCue$InTopFifty[i]
+  } else {
+    tableInTopFifty[6]<-tableInTopFifty[6]+SongCue$InTopFifty[i]
+  }
+}
+freqInTopFifty<-tableInTopFifty/sum(tableInTopFifty)
+freqInTopFifty<-freqInTopFifty*length(SongVectorList)
+tableInTopOneHundred<-c(numeric(6))
+for(i in 1:length(SongCue$SongArtist)){
+  if(SongCue$SongArtist[i]=="Others"){
+    tableInTopOneHundred[1]<-tableInTopOneHundred[1]+SongCue$InTopOneHundred[i]
+  } else if(SongCue$SongArtist[i]=="Cage The Elephant"){
+    tableInTopOneHundred[2]<-tableInTopOneHundred[2]+SongCue$InTopOneHundred[i]
+  } else if(SongCue$SongArtist[i]=="PoorMansPoison"){
+    tableInTopOneHundred[3]<-tableInTopOneHundred[3]+SongCue$InTopOneHundred[i]
+  } else if(SongCue$SongArtist[i]=="The Crane Wives"){
+    tableInTopOneHundred[4]<-tableInTopOneHundred[4]+SongCue$InTopOneHundred[i]
+  } else if(SongCue$SongArtist[i]=="The Heavy"){
+    tableInTopOneHundred[5]<-tableInTopOneHundred[5]+SongCue$InTopOneHundred[i]
+  } else {
+    tableInTopOneHundred[6]<-tableInTopOneHundred[6]+SongCue$InTopOneHundred[i]
+  }
+}
+freqInTopOneHundred<-tableInTopOneHundred/sum(tableInTopOneHundred)
+freqInTopOneHundred<-freqInTopOneHundred*length(SongVectorList)
+```
+
+```{r}
+chiFirstSong<-0
+chiTopTen<-0
+chiTopTwentyFive<-0
+chiTopFifty<-0
+chiTopHundred<-0
+freqBase<-as.vector(freqBase)
+for(ind in 1:length(freqFirstSong)){
+  chiFirstSong<-chiFirstSong+(((freqFirstSong[ind]-freqBase[ind])^2)/freqBase[ind])
+}
+for(ind in 1:length(freqTopTen)){
+  chiTopTen<-chiTopTen+(((freqTopTen[ind]-freqBase[ind])^2)/freqBase[ind])
+}
+for(ind in 1:length(freqInTopTwentyFive)){
+  chiTopTwentyFive<-chiTopTwentyFive+(((freqInTopTwentyFive[ind]-freqBase[ind])^2)/freqBase[ind])
+}
+for(ind in 1:length(freqInTopFifty)){
+  chiTopFifty<-chiTopFifty+(((freqInTopFifty[ind]-freqBase[ind])^2)/freqBase[ind])
+}
+for(ind in 1:length(freqInTopOneHundred)){
+  chiTopHundred<-chiTopHundred+(((freqInTopOneHundred[ind]-freqBase[ind])^2)/freqBase[ind])
+}
+pFirst<-pchisq(chiFirstSong,5,lower.tail = FALSE)
+pFirst
+pFirst>.05
+pTen<-pchisq(chiTopTen,5,lower.tail = FALSE)
+pTen
+pTen>.05
+pTFive<-pchisq(chiTopTwentyFive,5,lower.tail = FALSE)
+pTFive
+pTFive>.05
+pFifty<-pchisq(chiTopFifty,5,lower.tail=FALSE)
+pFifty
+pFifty>.05
+pHundred<-pchisq(chiTopHundred,5,lower.tail=FALSE)
+pHundred
+pHundred>.05
+```
+
+
+
+
+
+
+
