@@ -112,7 +112,7 @@ table(SongCue$SongArtist)
 Here is where I will graph the placements vs the songs
 ```{r, fig.width=16, fig.height=16}
 ggplot(SongCue, aes(x=SongArtist,y=FirstSong))+
-  geom_col()+
+  geom_col(aes(fill=SongArtist,color=SongArtist))+
   theme(axis.text.x=element_text(hjust=1,angle=30))+
   labs(title = "Which Bands are Shuffled to the First Song",
        x = "Band Name", y = "Times Shuffled First")
@@ -132,14 +132,16 @@ ggplot(SongCue, aes(x=SongArtist,y=InTopFifty))+
     labs(title = "Which Bands are Shuffled to the Top Fifty",
        x = "Band Name", y = "Times Shuffled Top Fifty")
 ggplot(SongCue, aes(x=SongArtist,y=InTopOneHundred))+
-  geom_col()+
+  geom_col(aes(fill=SongArtist,color=SongArtist))+
   theme(axis.text.x=element_text(hjust=1,angle=30))+
     labs(title = "Which Bands are Shuffled to Top One Hundred",
        x = "Band Name", y = "Times Shuffled Top One Hundred")
 ggplot(SongCue, aes(x=IsLiked,y=InTopOneHundred))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsLiked),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 100 based on Liked Status")
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopOneHundred))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 100 based on Subscribed Status")
 ggplot(SongCue, aes(x=IsLiked,y=InTopFifty))+
   geom_boxplot()
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopFifty))+
@@ -159,13 +161,15 @@ ggplot(SongCue, aes(x=IsSubscribed,y=FirstSong))+
 ```
 ```{r, fig.width=48, fig.height=10}
 ggplot(SongCue, aes(x=SongName,y=FirstSong))+
-  geom_col()+
+  geom_col(fill="Orange")+
   theme(axis.text.x=element_text(hjust=1,angle=90))+
-  scale_x_discrete(limits = SongCue$SongName)
+  scale_x_discrete(limits = SongCue$SongName)+
+  labs(title="Which Songs Shuffled Into The Top Song?")
 ggplot(SongCue, aes(x=SongName,y=InTopTen))+
   geom_col()+
   theme(axis.text.x=element_text(hjust=1,angle=90))+
-  scale_x_discrete(limits = SongCue$SongName)
+  scale_x_discrete(limits = SongCue$SongName)+
+  labs(title="Which Songs Shuffled Into The Top Ten Songs?")
 ```
 
 ```{r}
