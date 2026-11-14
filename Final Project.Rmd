@@ -65,6 +65,9 @@ addNewSongCue <- function(songVector){
       SongCue$InTopOneHundred[index]<-
         SongCue$InTopOneHundred[index]+1
     }
+    if(index==0){
+      print(songVector[i])
+    }
   }
   return(SongCue)
 }
@@ -136,30 +139,179 @@ ggplot(SongCue, aes(x=SongArtist,y=InTopOneHundred))+
   theme(axis.text.x=element_text(hjust=1,angle=30))+
     labs(title = "Which Bands are Shuffled to Top One Hundred",
        x = "Band Name", y = "Times Shuffled Top One Hundred")
+```
+
+```{r}
+#One Hundreds
+nloh<-c()
+yloh<-c()
+for(i in 1:length(SongCue$InTopOneHundred)){
+  if(SongCue$IsLiked[i]==TRUE){
+    yloh[length(yloh)+1]=SongCue$InTopOneHundred[i]
+  } else {
+    nloh[length(nloh)+1]=SongCue$InTopOneHundred[i]
+  }
+}
+nsoh<-c()
+ysoh<-c()
+t.test(nloh,yloh)
+for(i in 1:length(SongCue$InTopOneHundred)){
+  if(SongCue$IsSubscribed[i]==TRUE){
+    ysoh[length(ysoh)+1]=SongCue$InTopOneHundred[i]
+  } else {
+    nsoh[length(nsoh)+1]=SongCue$InTopOneHundred[i]
+  }
+}
+t.test(nsoh,ysoh)
 ggplot(SongCue, aes(x=IsLiked,y=InTopOneHundred))+
   geom_boxplot(aes(fill=IsLiked),color="BLACK")+
-  labs(title = "Five Number Summary for Songs in the Top 100 based on Liked Status")
+  labs(title = "Five Number Summary for Songs in the Top 100 based on Liked Status",
+       x = "If a Song's Video was Liked or Not",
+       y = "Times Individual Songs Appeared in the Top 100")+
+  theme_minimal()
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopOneHundred))+
   geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
-  labs(title = "Five Number Summary for Songs in the Top 100 based on Subscribed Status")
+  labs(title = "Five Number Summary for Songs in the Top 100 based on Subscribed Status",
+       x = "If a Song's Channel Was Subscribed To Or Not",
+       y = "Times Individual Songs Appeared in the Top 100")
+#Fifties
+nlff<-c()
+ylff<-c()
+for(i in 1:length(SongCue$InTopFifty)){
+  if(SongCue$IsLiked[i]==TRUE){
+    ylff[length(ylff)+1]=SongCue$InTopFifty[i]
+  } else {
+    nlff[length(nlff)+1]=SongCue$InTopFifty[i]
+  }
+}
+nsff<-c()
+ysff<-c()
+t.test(nlff,ylff)
+for(i in 1:length(SongCue$InTopFifty)){
+  if(SongCue$IsSubscribed[i]==TRUE){
+    ysff[length(ysff)+1]=SongCue$InTopFifty[i]
+  } else {
+    nsff[length(nsff)+1]=SongCue$InTopFifty[i]
+  }
+}
+t.test(nsff,ysff)
 ggplot(SongCue, aes(x=IsLiked,y=InTopFifty))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsLiked),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 50 based on Liked Status",
+       y = "Times Individual Songs Appear In the Top 50",
+       x = "If a Song's video was Liked or Not")+
+  theme_minimal()
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopFifty))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 50 based on Subscribed Status",
+       y = "Times Individual Songs Appear In the Top 50",
+       x = "If a Song's Channel was Subscribed Or Not")+
+  theme_minimal()
+#Twenty Fives
+nltf<-c()
+yltf<-c()
+for(i in 1:length(SongCue$InTopTwentyFive)){
+  if(SongCue$IsLiked[i]==TRUE){
+    yltf[length(yltf)+1]=SongCue$InTopTwentyFive[i]
+  } else {
+    nltf[length(nltf)+1]=SongCue$InTopTwentyFive[i]
+  }
+}
+nstf<-c()
+ystf<-c()
+t.test(nltf,yltf)
+for(i in 1:length(SongCue$InTopTwentyFive)){
+  if(SongCue$IsSubscribed[i]==TRUE){
+    ystf[length(ystf)+1]=SongCue$InTopTwentyFive[i]
+  } else {
+    nstf[length(nstf)+1]=SongCue$InTopTwentyFive[i]
+  }
+}
+t.test(nstf,ystf)
 ggplot(SongCue, aes(x=IsLiked,y=InTopTwentyFive))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsLiked),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 25 based on Liked Status",
+       y = "Times Individual Songs Appear In the Top 25",
+       x = "If a Song's video was Liked or Not")+
+  theme_minimal()
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopTwentyFive))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 25 based on Subscribed Status",
+       y = "Times Individual Songs Appear In the Top 25",
+       x = "If a Song's Channel was Subscribed Or Not")+
+  theme_minimal()
+#Tens
+nltn<-c()
+yltn<-c()
+for(i in 1:length(SongCue$InTopTen)){
+  if(SongCue$IsLiked[i]==TRUE){
+    yltn[length(yltn)+1]=SongCue$InTopTen[i]
+  } else {
+    nltn[length(nltn)+1]=SongCue$InTopTen[i]
+  }
+}
+nstn<-c()
+ystn<-c()
+t.test(nltn,yltn)
+for(i in 1:length(SongCue$InTopTen)){
+  if(SongCue$IsSubscribed[i]==TRUE){
+    ystn[length(ystn)+1]=SongCue$InTopTen[i]
+  } else {
+    nstn[length(nstn)+1]=SongCue$InTopTen[i]
+  }
+}
+t.test(nstn,ystn)
 ggplot(SongCue, aes(x=IsLiked,y=InTopTen))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsLiked),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top Slot based on Liked Status",
+       y = "Times Individual Songs Appear In the Top Slot",
+       x = "If a Song's video was Liked or Not")+
+  theme_minimal()
 ggplot(SongCue, aes(x=IsSubscribed,y=InTopTen))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top 10 based on Subscribed Status",
+       y = "Times Individual Songs Appear In the Top 10",
+       x = "If a Song's Channel was Subscribed Or Not")+
+  theme_minimal()
+#Ones
+nlon<-c()
+ylon<-c()
+for(i in 1:length(SongCue$FirstSong)){
+  if(SongCue$IsLiked[i]==TRUE){
+    ylon[length(ylon)+1]=SongCue$FirstSong[i]
+  } else {
+    nlon[length(nlon)+1]=SongCue$FirstSong[i]
+  }
+}
+nson<-c()
+yson<-c()
+t.test(nlon,ylon)
+for(i in 1:length(SongCue$FirstSong)){
+  if(SongCue$IsSubscribed[i]==TRUE){
+    yson[length(yson)+1]=SongCue$FirstSong[i]
+  } else {
+    nson[length(nson)+1]=SongCue$FirstSong[i]
+  }
+}
+t.test(nson,yson)
 ggplot(SongCue, aes(x=IsLiked,y=FirstSong))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsLiked),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top Slot based on Liked Status",
+       y = "Times Individual Songs Appear In the Top Slot",
+       x = "If a Song's video was Liked or Not")+
+  theme_minimal()
 ggplot(SongCue, aes(x=IsSubscribed,y=FirstSong))+
-  geom_boxplot()
+  geom_boxplot(aes(fill=IsSubscribed),color="BLACK")+
+  labs(title = "Five Number Summary for Songs in the Top Slot based on Subscribed Status",
+       y = "Times Individual Songs Appear In the Top Slot",
+       x = "If a Song's Channel was Subscribed Or Not")+
+  theme_minimal()
 ```
+
 ```{r, fig.width=48, fig.height=10}
+#Showing 
+sum(SongCue$FirstSong)
+sum(SongCue$FirstSong[21:588])
 ggplot(SongCue, aes(x=SongName,y=FirstSong))+
   geom_col(fill="Orange")+
   theme(axis.text.x=element_text(hjust=1,angle=90))+
@@ -212,7 +364,7 @@ for(i in 1:length(SongCue$InTopTen)){
   }
 }
 freqTopTen<-tableTopTen/sum(tableTopTen)
-freqTopTen<-freqTopTen*length(SongVectorList)
+freqTopTen<-freqTopTen*length(SongVectorList)*10
 tableInTopTwentyFive<-c(numeric(6))
 for(i in 1:length(SongCue$SongArtist)){
   if(SongCue$SongArtist[i]=="Others"){
@@ -230,7 +382,7 @@ for(i in 1:length(SongCue$SongArtist)){
   }
 }
 freqInTopTwentyFive<-tableInTopTwentyFive/sum(tableInTopTwentyFive)
-freqInTopTwentyFive<-freqInTopTwentyFive*length(SongVectorList)
+freqInTopTwentyFive<-freqInTopTwentyFive*length(SongVectorList)*25
 tableInTopFifty<-c(numeric(6))
 for(i in 1:length(SongCue$SongArtist)){
   if(SongCue$SongArtist[i]=="Others"){
@@ -248,7 +400,7 @@ for(i in 1:length(SongCue$SongArtist)){
   }
 }
 freqInTopFifty<-tableInTopFifty/sum(tableInTopFifty)
-freqInTopFifty<-freqInTopFifty*length(SongVectorList)
+freqInTopFifty<-freqInTopFifty*length(SongVectorList)*50
 tableInTopOneHundred<-c(numeric(6))
 for(i in 1:length(SongCue$SongArtist)){
   if(SongCue$SongArtist[i]=="Others"){
@@ -266,7 +418,7 @@ for(i in 1:length(SongCue$SongArtist)){
   }
 }
 freqInTopOneHundred<-tableInTopOneHundred/sum(tableInTopOneHundred)
-freqInTopOneHundred<-freqInTopOneHundred*length(SongVectorList)
+freqInTopOneHundred<-freqInTopOneHundred*length(SongVectorList)*100
 ```
 
 ```{r}
@@ -280,16 +432,16 @@ for(ind in 1:length(freqFirstSong)){
   chiFirstSong<-chiFirstSong+(((freqFirstSong[ind]-freqBase[ind])^2)/freqBase[ind])
 }
 for(ind in 1:length(freqTopTen)){
-  chiTopTen<-chiTopTen+(((freqTopTen[ind]-freqBase[ind])^2)/freqBase[ind])
+  chiTopTen<-chiTopTen+(((freqTopTen[ind]-(freqBase[ind]*10))^2)/(freqBase[ind]*10))
 }
 for(ind in 1:length(freqInTopTwentyFive)){
-  chiTopTwentyFive<-chiTopTwentyFive+(((freqInTopTwentyFive[ind]-freqBase[ind])^2)/freqBase[ind])
+  chiTopTwentyFive<-chiTopTwentyFive+(((freqInTopTwentyFive[ind]-(freqBase[ind]*25))^2)/(freqBase[ind]*25))
 }
 for(ind in 1:length(freqInTopFifty)){
-  chiTopFifty<-chiTopFifty+(((freqInTopFifty[ind]-freqBase[ind])^2)/freqBase[ind])
+  chiTopFifty<-chiTopFifty+(((freqInTopFifty[ind]-(freqBase[ind]*50))^2)/(freqBase[ind]*50))
 }
 for(ind in 1:length(freqInTopOneHundred)){
-  chiTopHundred<-chiTopHundred+(((freqInTopOneHundred[ind]-freqBase[ind])^2)/freqBase[ind])
+  chiTopHundred<-chiTopHundred+(((freqInTopOneHundred[ind]-(freqBase[ind]*100))^2)/(freqBase[ind]*100))
 }
 pFirst<-pchisq(chiFirstSong,5,lower.tail = FALSE)
 pFirst
@@ -307,6 +459,101 @@ pHundred<-pchisq(chiTopHundred,5,lower.tail=FALSE)
 pHundred
 pHundred>.05
 ```
+
+## Revisions
+```{r}
+fs_test<-chisq.test(
+  x=tableFirstSong,
+  p=tableBase/sum(tableBase)
+)
+fs_test
+fs_test$expected
+tten_test<-chisq.test(
+  x=tableTopTen,
+  p=tableBase/sum(tableBase)
+)
+tten_test
+tten_test$expected
+ttf_test<-chisq.test(
+  x=tableInTopTwentyFive,
+  p=tableBase/sum(tableBase)
+)
+ttf_test
+ttf_test$expected
+tfif_test<-chisq.test(
+  x=tableInTopFifty,
+  p=tableBase/sum(tableBase)
+)
+tfif_test
+tfif_test$expected
+thun_test<-chisq.test(
+  x=tableInTopOneHundred,
+  p=tableBase/sum(tableBase)
+)
+thun_test
+thun_test$expected
+```
+
+```{r}
+condenseFirstSong<-SongCue%>%
+  group_by(SongArtist)%>%
+  summarise(FirstSum=sum(FirstSong),
+            .groups = "drop")
+ggplot(condenseFirstSong,aes(x=SongArtist, y=FirstSum))+
+  geom_col(aes(fill=SongArtist),color="BLACK")+
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Which Bands are Shuffled to the First Song",
+       x = "Artist Category",
+       y = "Amount of Times Shuffled to First")
+condenseTenSongs<-SongCue%>%
+  group_by(SongArtist)%>%
+  summarise(TenSum=sum(InTopTen),
+            .groups = "drop")
+ggplot(condenseTenSongs,aes(x=SongArtist, y=TenSum))+
+  geom_col(aes(fill=SongArtist),color="BLACK")+
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Which Bands are Shuffled to the Top 10",
+       x = "Artist Category",
+       y = "Amount of Times Shuffled to the Top")
+condense25songs<-SongCue%>%
+  group_by(SongArtist)%>%
+  summarise(TFiveSum=sum(InTopTwentyFive),
+            .groups = "drop")
+ggplot(condense25songs,aes(x=SongArtist, y=TFiveSum))+
+  geom_col(aes(fill=SongArtist),color="BLACK")+
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Which Bands are Shuffled to the Top 25",
+       x = "Artist Category",
+       y = "Amount of Times Shuffled to the Top")
+condenseFiftySongs<-SongCue%>%
+  group_by(SongArtist)%>%
+  summarise(FiftySum=sum(InTopFifty),
+            .groups = "drop")
+ggplot(condenseFiftySongs,aes(x=SongArtist, y=FiftySum))+
+  geom_col(aes(fill=SongArtist),color="BLACK")+
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Which Bands are Shuffled to the Top 50",
+       x = "Artist Category",
+       y = "Amount of Times Shuffled to the Top")
+condenseHundredSongs<-SongCue%>%
+  group_by(SongArtist)%>%
+  summarise(HundredSum=sum(InTopOneHundred),
+            .groups = "drop")
+ggplot(condenseHundredSongs,aes(x=SongArtist, y=HundredSum))+
+  geom_col(aes(fill=SongArtist),color="BLACK")+
+  coord_flip()+
+  theme_minimal()+
+  labs(title = "Which Bands are Shuffled to the Top 100",
+       x = "Artist Category",
+       y = "Amount of Times Shuffled to the Top")
+```
+
+
+
 
 
 
